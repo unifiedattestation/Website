@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unified Attestation</title>
+    <meta
+      name="description"
+      content="Unified Attestation: a single backend, a system service, and SDKs for offline-verifiable integrity tokens."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient"></div>
+    <header class="nav">
+      <div class="logo">Unified Attestation</div>
+      <nav>
+        <a href="#architecture">Architecture</a>
+        <a href="#flow">Flow</a>
+        <a href="#api">API</a>
+        <a href="#sdk">SDKs</a>
+        <a href="#run">Run</a>
+      </nav>
+      <a class="cta" href="#run">Get Started</a>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">Single backend · Offline verification · No device IDs</p>
+          <h1>
+            Attestation that feels
+            <span class="accent">boringly reliable</span>.
+          </h1>
+          <p>
+            Unified Attestation delivers short-lived integrity tokens signed by a single backend,
+            verified offline by app servers, and issued via a privileged Android system service.
+          </p>
+          <div class="hero-actions">
+            <a class="primary" href="#run">Launch the stack</a>
+            <a class="secondary" href="#architecture">See architecture</a>
+          </div>
+          <div class="hero-meta">
+            <div>
+              <span>Backend</span>
+              <strong>Device + Home combined</strong>
+            </div>
+            <div>
+              <span>Attestation</span>
+              <strong>KeyMint + Standard requestHash</strong>
+            </div>
+            <div>
+              <span>Federation</span>
+              <strong>Offline trust anchors</strong>
+            </div>
+          </div>
+        </div>
+        <div class="hero-panel" aria-hidden="true">
+          <div class="panel-line">requestHash = SHA-256(canonicalRequest)</div>
+          <div class="panel-block">
+            <div class="panel-title">Device → Backend</div>
+            <pre>
+POST /api/v1/device/process
+{
+  projectId,
+  requestHash,
+  attestationChain[]
+}
+            </pre>
+          </div>
+          <div class="panel-block">
+            <div class="panel-title">Backend → App Server</div>
+            <pre>
+POST /api/v1/app/decodeToken
+{
+  projectId,
+  token,
+  expectedRequestHash
+}
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="section-head">
+          <h2>Architecture</h2>
+          <p>One backend, one system service, minimal surface area.</p>
+        </div>
+        <div class="grid">
+          <article class="card reveal">
+            <h3>Unified Backend</h3>
+            <p>
+              Acts as Home + Device backend. Stores trust anchors, verifies chains, and signs
+              short-lived tokens. Federation works fully offline.
+            </p>
+            <ul>
+              <li>GET /api/v1/info</li>
+              <li>POST /api/v1/device/process</li>
+              <li>POST /api/v1/app/decodeToken</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Android System Service</h3>
+            <p>
+              Privileged service that talks to KeyMint, fetches attestation chains, and sends them
+              to the backend. Apps only call the SDK.
+            </p>
+            <ul>
+              <li>Provider discovery</li>
+              <li>Per (app, backend) keys</li>
+              <li>Binder/AIDL boundary</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>SDK + Example App</h3>
+            <p>
+              Thin SDK exposes Play Integrity-style API. Example app shows canonical request hashing,
+              provider selection, and verdict display.
+            </p>
+            <ul>
+              <li>No networking</li>
+              <li>No cert exposure</li>
+              <li>Opaque token</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="flow">
+        <div class="section-head">
+          <h2>End-to-end flow</h2>
+          <p>App → SDK → Service → Backend → App server. No nonce protocol.</p>
+        </div>
+        <div class="timeline">
+          <div class="step reveal">
+            <span>1</span>
+            <div>
+              <h4>Canonical request</h4>
+              <p>App + server compute identical requestHash.</p>
+            </div>
+          </div>
+          <div class="step reveal">
+            <span>2</span>
+            <div>
+              <h4>Provider discovery</h4>
+              <p>SDK returns enabled backendIds only.</p>
+            </div>
+          </div>
+          <div class="step reveal">
+            <span>3</span>
+            <div>
+              <h4>KeyMint attestation</h4>
+              <p>Service sets challenge = requestHash and posts chain.</p>
+            </div>
+          </div>
+          <div class="step reveal">
+            <span>4</span>
+            <div>
+              <h4>Token issuance</h4>
+              <p>Backend verifies chain + policies, signs token (60s TTL).</p>
+            </div>
+          </div>
+          <div class="step reveal">
+            <span>5</span>
+            <div>
+              <h4>Offline verification</h4>
+              <p>App server checks signature + requestHash.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="api">
+        <div class="section-head">
+          <h2>Key APIs</h2>
+          <p>Minimal endpoints with strict role separation.</p>
+        </div>
+        <div class="api-grid">
+          <div class="api-block reveal">
+            <h4>Public</h4>
+            <code>GET /api/v1/info</code>
+            <p>Returns backendId + public keys.</p>
+          </div>
+          <div class="api-block reveal">
+            <h4>Device-facing</h4>
+            <code>POST /api/v1/device/process</code>
+            <p>Verifies chain + attestation challenge, mints token.</p>
+          </div>
+          <div class="api-block reveal">
+            <h4>App server</h4>
+            <code>POST /api/v1/app/decodeToken</code>
+            <p>Offline verification using federation trust store.</p>
+          </div>
+          <div class="api-block reveal">
+            <h4>OEM/Admin</h4>
+            <code>/api/v1/oem/*</code>
+            <p>Device families, builds, trust anchors.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="sdk">
+        <div class="section-head">
+          <h2>SDKs & Services</h2>
+          <p>Android SDK, system service, and server SDKs for JS/Python.</p>
+        </div>
+        <div class="grid">
+          <article class="card reveal">
+            <h3>Android SDK</h3>
+            <p>Public API mirroring Play Integrity, no networking.</p>
+            <ul>
+              <li>getProviderSet(projectId)</li>
+              <li>requestIntegrityToken(backendId, projectId, requestHash)</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Server SDK (JS/Python)</h3>
+            <p>Helper utilities for decoding tokens and trust checks.</p>
+            <ul>
+              <li>getBackendInfo()</li>
+              <li>decodeToken(projectId, token)</li>
+            </ul>
+          </article>
+          <article class="card reveal">
+            <h3>Example App Server</h3>
+            <p>TypeScript demo selecting backend and verifying tokens.</p>
+            <ul>
+              <li>Backend selection</li>
+              <li>RequestHash comparison</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="run">
+        <div class="section-head">
+          <h2>Run locally</h2>
+          <p>Quick commands to bootstrap the stack.</p>
+        </div>
+        <div class="run-grid">
+          <div class="run-block reveal">
+            <h4>Backend</h4>
+            <pre>
+cd Backend
+npm install
+npm run dev:backend
+            </pre>
+          </div>
+          <div class="run-block reveal">
+            <h4>Portal</h4>
+            <pre>
+cd Backend
+npm run dev:portal
+            </pre>
+          </div>
+          <div class="run-block reveal">
+            <h4>Example App Server</h4>
+            <pre>
+cd Example-App-Server
+npm install
+npm run dev
+            </pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        <strong>Unified Attestation</strong>
+        <span>Designed for deterministic verification.</span>
+      </div>
+      <div class="foot-links">
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
