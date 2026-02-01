@@ -7,7 +7,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta
       name="description"
-      content="Unified Attestation: a single backend, a system service, and SDKs for offline-verifiable integrity tokens."
+      content="Unified Attestation is a free, open-source alternative to Google Play Integrity with offline verification and simple app + server integration."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,8 +45,10 @@
             <span class="accent">boringly reliable</span>.
           </h1>
           <p>
-            Unified Attestation delivers short-lived integrity tokens signed by a single backend,
-            verified offline by app servers, and issued via a privileged Android system service.
+            Unified Attestation is a free, open-source alternative to Google Play Integrity. It delivers
+            short-lived integrity tokens signed by a single backend, verified offline by app servers, and
+            issued via a privileged Android system service. It can live alongside Play Integrity, and it’s
+            simple to integrate for app developers on both the app and server sides.
           </p>
           <div class="hero-actions">
             <a class="primary" href="#run">Launch the stack</a>
@@ -98,7 +100,7 @@ POST /api/v1/app/decodeToken
       <section class="section" id="architecture">
         <div class="section-head">
           <h2>Architecture</h2>
-          <p>One backend, one system service, minimal surface area.</p>
+          <p>An alternative to Google Play Integrity that’s easy to integrate and can run in parallel.</p>
         </div>
         <div class="grid">
           <article class="card reveal">
@@ -143,7 +145,7 @@ POST /api/v1/app/decodeToken
       <section class="section" id="flow">
         <div class="section-head">
           <h2>End-to-end flow</h2>
-          <p>App → SDK → Service → Backend → App server. No nonce protocol.</p>
+            <p>App → SDK → Service → Backend → App server. No nonce protocol. Simple for app devs.</p>
         </div>
         <div class="timeline">
           <div class="step reveal">
@@ -216,7 +218,7 @@ POST /api/v1/app/decodeToken
       <section class="section" id="sdk">
         <div class="section-head">
           <h2>SDKs & Services</h2>
-          <p>Android SDK, system service, and server SDKs for JS/Python.</p>
+          <p>Android SDK, system service, and server SDKs for JS/Python — free and open source.</p>
         </div>
         <div class="grid">
           <article class="card reveal">
