@@ -44,8 +44,16 @@ body {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-weight: 700;
   letter-spacing: 0.5px;
+}
+
+.logo img {
+  width: 36px;
+  height: 36px;
 }
 
 nav {
