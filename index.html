@@ -79,7 +79,14 @@ POST /api/v1/device/process
 {
   projectId,
   requestHash,
-  attestationChain[]
+  attestationChain[],
+  deviceMeta: {
+    manufacturer,
+    brand,
+    model,
+    device,
+    buildFingerprint
+  }
 }
             </pre>
           </div>
