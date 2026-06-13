@@ -5,11 +5,67 @@
   --accent-2: #b05a1c;
   --mist: #e5e0d7;
   --cloud: #ffffff;
+  --muted: #5a5f66;
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --ambient-1: rgba(12, 123, 91, 0.18);
+  --ambient-2: rgba(176, 90, 28, 0.18);
+  --ambient-3: rgba(17, 20, 24, 0.08);
+  --nav-bg: rgba(246, 244, 239, 0.85);
+  --nav-border: rgba(17, 20, 24, 0.08);
+  --panel-bg: #111418;
+  --panel-ink: #f4f1ea;
+  --panel-sub: #c7c2b7;
+  --panel-title: #d6d2c7;
+  --panel-inner: rgba(255, 255, 255, 0.06);
+  --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  --meta-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  --footer-border: rgba(17, 20, 24, 0.1);
+  --diagram-stroke: rgba(17, 20, 24, 0.18);
+  --diagram-node: #ffffff;
+  --diagram-node-stroke: rgba(17, 20, 24, 0.18);
+  --diagram-label: #111418;
+  --diagram-sublabel: #5a5f66;
+}
+
+:root[data-theme="dark"] {
+  --ink: #ecebe7;
+  --paper: #0e1115;
+  --accent: #2fd6a6;
+  --accent-2: #ff9e5a;
+  --mist: #232830;
+  --cloud: #161a20;
+  --muted: #9aa0a8;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --ambient-1: rgba(47, 214, 166, 0.16);
+  --ambient-2: rgba(255, 158, 90, 0.14);
+  --ambient-3: rgba(255, 255, 255, 0.05);
+  --nav-bg: rgba(14, 17, 21, 0.82);
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --panel-bg: #07090c;
+  --panel-ink: #e8e6df;
+  --panel-sub: #8a8e95;
+  --panel-title: #b9bcc2;
+  --panel-inner: rgba(255, 255, 255, 0.04);
+  --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --meta-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --footer-border: rgba(255, 255, 255, 0.08);
+  --diagram-stroke: rgba(255, 255, 255, 0.22);
+  --diagram-node: #161a20;
+  --diagram-node-stroke: rgba(255, 255, 255, 0.18);
+  --diagram-label: #ecebe7;
+  --diagram-sublabel: #9aa0a8;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -18,16 +74,18 @@ body {
   color: var(--ink);
   background: var(--paper);
   line-height: 1.6;
+  transition: background 0.35s ease, color 0.35s ease;
 }
 
 .ambient {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(60% 50% at 15% 10%, rgba(12, 123, 91, 0.18), transparent 60%),
-    radial-gradient(50% 50% at 90% 5%, rgba(176, 90, 28, 0.18), transparent 55%),
-    radial-gradient(40% 40% at 80% 80%, rgba(17, 20, 24, 0.08), transparent 60%);
+    radial-gradient(60% 50% at 15% 10%, var(--ambient-1), transparent 60%),
+    radial-gradient(50% 50% at 90% 5%, var(--ambient-2), transparent 55%),
+    radial-gradient(40% 40% at 80% 80%, var(--ambient-3), transparent 60%);
   z-index: -1;
+  transition: background 0.35s ease;
 }
 
 .nav {
@@ -38,9 +96,10 @@ body {
   position: sticky;
   top: 0;
   backdrop-filter: blur(12px);
-  background: rgba(246, 244, 239, 0.85);
-  border-bottom: 1px solid rgba(17, 20, 24, 0.08);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
   z-index: 10;
+  transition: background 0.35s ease, border-color 0.35s ease;
 }
 
 .logo {
@@ -68,6 +127,49 @@ nav a,
 .secondary {
   color: inherit;
   text-decoration: none;
+}
+
+.nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--nav-border);
+  color: inherit;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--cloud);
+  transform: translateY(-1px);
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
 }
 
 .cta {
@@ -141,7 +243,7 @@ nav a,
   border: 1px solid var(--mist);
   border-radius: 16px;
   padding: 12px 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--meta-shadow);
 }
 
 .hero-meta span {
@@ -152,8 +254,8 @@ nav a,
 }
 
 .hero-panel {
-  background: var(--ink);
-  color: #f4f1ea;
+  background: var(--panel-bg);
+  color: var(--panel-ink);
   padding: 28px;
   border-radius: 28px;
   box-shadow: var(--shadow);
@@ -162,12 +264,12 @@ nav a,
 
 .panel-line {
   font-size: 0.85rem;
-  color: #c7c2b7;
+  color: var(--panel-sub);
 }
 
 .panel-block {
   margin-top: 24px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--panel-inner);
   padding: 16px;
   border-radius: 16px;
 }
@@ -177,7 +279,7 @@ nav a,
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   margin-bottom: 8px;
-  color: #d6d2c7;
+  color: var(--panel-title);
 }
 
 .panel-block pre {
@@ -215,7 +317,7 @@ nav a,
   border: 1px solid var(--mist);
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--card-shadow);
 }
 
 .card h3 {
@@ -225,6 +327,144 @@ nav a,
 .card ul {
   padding-left: 18px;
   margin: 16px 0 0;
+}
+
+.arch-diagram {
+  background: var(--cloud);
+  border: 1px solid var(--mist);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.arch-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.arch-diagram .node-rect {
+  fill: var(--diagram-node);
+  stroke: var(--diagram-node-stroke);
+  stroke-width: 1.5;
+  transition: fill 0.35s ease, stroke 0.35s ease;
+}
+
+.arch-diagram .node-label {
+  fill: var(--diagram-label);
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  transition: fill 0.35s ease;
+}
+
+.arch-diagram .node-sub {
+  fill: var(--diagram-sublabel);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  transition: fill 0.35s ease;
+}
+
+.arch-diagram .node-icon {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arch-diagram .flow-line {
+  fill: none;
+  stroke: var(--diagram-stroke);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 6;
+  transition: stroke 0.35s ease;
+}
+
+.arch-diagram .flow-pulse {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+
+.arch-diagram .pulse-1 {
+  animation: pulse-path-1 4.8s linear infinite;
+}
+
+.arch-diagram .pulse-2 {
+  animation: pulse-path-2 4.8s linear infinite;
+  animation-delay: 1.2s;
+}
+
+.arch-diagram .pulse-3 {
+  animation: pulse-path-3 4.8s linear infinite;
+  animation-delay: 2.4s;
+}
+
+.arch-diagram .pulse-4 {
+  animation: pulse-path-4 4.8s linear infinite;
+  animation-delay: 3.6s;
+}
+
+.arch-diagram .node-group {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: node-breathe 6s ease-in-out infinite;
+}
+
+.arch-diagram .node-group:nth-child(2) { animation-delay: 0s; }
+.arch-diagram .node-group:nth-child(3) { animation-delay: 0.6s; }
+.arch-diagram .node-group:nth-child(4) { animation-delay: 1.2s; }
+.arch-diagram .node-group:nth-child(5) { animation-delay: 1.8s; }
+.arch-diagram .node-group:nth-child(6) { animation-delay: 2.4s; }
+
+@keyframes node-breathe {
+  0%, 100% { opacity: 0.96; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-path-1 {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes pulse-path-2 {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes pulse-path-3 {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes pulse-path-4 {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+.arch-diagram .pulse-1 { offset-path: path('M 90 130 L 240 130'); }
+.arch-diagram .pulse-2 { offset-path: path('M 360 130 L 510 130'); }
+.arch-diagram .pulse-3 { offset-path: path('M 630 130 L 780 130'); }
+.arch-diagram .pulse-4 { offset-path: path('M 555 180 L 555 240 L 305 240 L 305 175'); }
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-diagram .pulse-1,
+  .arch-diagram .pulse-2,
+  .arch-diagram .pulse-3,
+  .arch-diagram .pulse-4,
+  .arch-diagram .node-group {
+    animation: none;
+  }
+  .arch-diagram .flow-pulse {
+    display: none;
+  }
 }
 
 .timeline {
@@ -281,8 +521,8 @@ nav a,
 }
 
 .run-block {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--panel-bg);
+  color: var(--panel-ink);
   border-radius: 16px;
   padding: 20px;
 }
@@ -296,7 +536,7 @@ nav a,
 
 footer {
   padding: 32px 64px 48px;
-  border-top: 1px solid rgba(17, 20, 24, 0.1);
+  border-top: 1px solid var(--footer-border);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -385,6 +625,10 @@ footer {
   .step {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .arch-diagram {
+    padding: 16px;
   }
 
   footer {
